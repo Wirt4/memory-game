@@ -2,6 +2,7 @@
     display: flex;
     flex-wrap: wrap;
     /*note this is based on a model with 100px by 100px cells in a 3 X 4 grid, may want to refactor later for scalability*/
-    height: 300px;
-    width: 400px;
+   /*should accomadate 24 tiles*/
+    height: 500px;
+    width: 500px;
 }
