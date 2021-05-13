@@ -94,10 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
         card.removeEventListener('click', flipCard)
     }
 
-    function cleared(card){
-        return card.getAttribute('img') === noCard
-    }
-
     // any surface that is not white is set to a card back
     //check for matches
     function checkForMatch() {
@@ -126,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultDisplay.textContent = scorePreface.concat('', cardsWon.length.toString() )
         if (cardsWon.length === Math.floor(cardArray.length / 2)) {
             resultDisplay.textContent = 'Congratulations! You picked all the pretty penguins!'
+            //switch remaining card back with flag image here
             killAll()
         }
     }
@@ -141,15 +138,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //flip your card
     function flipCard() {
+        gameOver = false
         let cardId = this.getAttribute('data-id')
         this.setAttribute('src', cardArray[cardId].img)
         if (cardArray[cardId] === bombCard){
             setTimeout(alert("Game Over: You stepped in penguin poop"), 500)
+            gameOver = true
             killAll()
         }
         cardsChosen.push(cardArray[cardId].name)
         cardsChosenId.push(cardId)
-        if (cardsChosen.length === 2) {
+        if (cardsChosen.length === 2 && !gameOver) {
             setTimeout(checkForMatch, 500)
         }
     }
