@@ -62,13 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const bomb = "game over, bomb"
     const bombImg = 'Images/bomb.jpg'
     const bombCard = {name: bomb, img: 'Images/bomb.jpg'}
+    const scorePreface = "Pretty Penguins Picked: "
     //doubles the cards in the card array, shuffles it
     //maybe add "bomb" card
     function prepareCardArray() {
         let arrayCopy = cardArray.map(x => x);
         cardArray = cardArray.concat(arrayCopy);
         cardArray.push(bombCard)
-        cardArray.sort(() => 0.5 - Math.random())
+        //cardArray.sort(() => 0.5 - Math.random())
     }
     //sets the surface of a card to it's image source
     function setCard(card, imgSrc) {
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.addEventListener('click', flipCard)
             grid.appendChild(card)
         }
+        resultDisplay.textContent = scorePreface
     }
 
     //removes the click event listent from a chard
@@ -122,10 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         cardsChosen = []
         cardsChosenId = []
-       
-        resultDisplay.textContent = cardsWon.length
+        resultDisplay.textContent = scorePreface.concat('', cardsWon.length.toString() )
         if (cardsWon.length === Math.floor(cardArray.length / 2)) {
-            resultDisplay.textContent = 'Congratulations! You found them all!'
+            resultDisplay.textContent = 'Congratulations! You picked all the pretty penguins!'
+            killAll()
         }
     }
 
