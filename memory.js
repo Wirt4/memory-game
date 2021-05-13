@@ -24,6 +24,30 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             name: 'penguin wide angle',
             img: 'Images/penguin_wide_angle.jpg'
+        },
+        {
+            name: 'baby penguin',
+            img: 'Images/penguin_baby.jpg'
+        },
+        {
+            name: 'penguin jumping',
+            img: 'Images/penguin_jumping.jpg'
+        },
+        {
+            name: 'penguins in snow',
+            img: 'Images/penguins_in_snow.jpg'
+        },
+        {
+            name: 'penguins looking up',
+            img: 'Images/penguins_looking_up.jpg'
+        },
+        {
+            name:'rockhopper penguins',
+            img: 'Images/penguins_rockhoppers.jpg'
+        },
+        {
+            name: 'baby penguin',
+            img: 'Images/penguin_baby.jpg'
         }
     ]
 
@@ -35,16 +59,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let cardsWon = []
     const cardBack = 'Images/card_back.jpg'
     const noCard = 'Images/white.jpg'
-
+    const bomb = "game over, bomb"
+    const bombImg = 'Images/bomb.jpg'
+    const bombCard = {name: bomb, img: 'Images/bomb.jpg'}
     //doubles the cards in the card array, shuffles it
     //maybe add "bomb" card
-    function prepareCardArray(){
-        const arrayCopy = cardArray.map(x => x);
+    function prepareCardArray() {
+        let arrayCopy = cardArray.map(x => x);
         cardArray = cardArray.concat(arrayCopy);
+        cardArray.push(bombCard)
         cardArray.sort(() => 0.5 - Math.random())
     }
     //sets the surface of a card to it's image source
-    function setCard(card, imgSrc){
+    function setCard(card, imgSrc) {
         card.setAttribute('src', imgSrc)
     }
 
@@ -53,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         prepareCardArray()
         for (let i = 0; i < cardArray.length; i++) {
             const card = document.createElement('img')
-           // card.setAttribute('src', cardBack)
+            // card.setAttribute('src', cardBack)
             setCard(card, cardBack)
             card.setAttribute('data-id', i)
             card.addEventListener('click', flipCard)
@@ -62,9 +89,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //removes the click event listent from a chard
-    function deactivate(card){
+    function deactivate(card) {
         card.removeEventListener('click', flipCard)
     }
+
+    function cleared(card){
+        return card.getAttribute('img') === noCard
+    }
+
+    // any surface that is not white is set to a card back
     //check for matches
     function checkForMatch() {
         const cards = document.querySelectorAll('img')
@@ -77,33 +110,44 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('You have clicked the same image!')
         }
         else if (cardsChosen[0] === cardsChosen[1]) {
-            alert('You found a match')
             setCard(cards[optionOneId], noCard)
             setCard(cards[optionTwoId], noCard)
             deactivate(cards[optionOneId])
             deactivate(cards[optionTwoId])
-            //cards[optionOneId].removeEventListener('click', flipCard)
-            //cards[optionTwoId].removeEventListener('click', flipCard)
             cardsWon.push(cardsChosen)
         } else {
             setCard(cards[optionOneId], cardBack)
             setCard(cards[optionTwoId], cardBack)
-            alert('Sorry, try again')
+            //alert('Sorry, try again')
         }
         cardsChosen = []
         cardsChosenId = []
+       
         resultDisplay.textContent = cardsWon.length
-        if (cardsWon.length === cardArray.length / 2) {
+        if (cardsWon.length === Math.floor(cardArray.length / 2)) {
             resultDisplay.textContent = 'Congratulations! You found them all!'
         }
+    }
+
+    //removes event listeners from all cards
+    function killAll(){
+        const cards = document.querySelectorAll('img')
+        for (let i=0; i < cards.length; i++){
+            deactivate(cards[i])
+        }
+
     }
 
     //flip your card
     function flipCard() {
         let cardId = this.getAttribute('data-id')
+        this.setAttribute('src', cardArray[cardId].img)
+        if (cardArray[cardId] === bombCard){
+            setTimeout(alert("Game Over: You stepped in penguin poop"), 500)
+            killAll()
+        }
         cardsChosen.push(cardArray[cardId].name)
         cardsChosenId.push(cardId)
-        this.setAttribute('src', cardArray[cardId].img)
         if (cardsChosen.length === 2) {
             setTimeout(checkForMatch, 500)
         }
