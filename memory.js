@@ -63,13 +63,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const bombImg = 'Images/bomb.jpg'
     const bombCard = {name: bomb, img: 'Images/bomb.jpg'}
     const scorePreface = "Pretty Penguins Picked: "
+    
     //doubles the cards in the card array, shuffles it
-    //maybe add "bomb" card
     function prepareCardArray() {
         let arrayCopy = cardArray.map(x => x);
         cardArray = cardArray.concat(arrayCopy);
         cardArray.push(bombCard)
-        //cardArray.sort(() => 0.5 - Math.random())
+        cardArray.sort(() => 0.5 - Math.random())
     }
     //sets the surface of a card to it's image source
     function setCard(card, imgSrc) {
@@ -81,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
         prepareCardArray()
         for (let i = 0; i < cardArray.length; i++) {
             const card = document.createElement('img')
-            // card.setAttribute('src', cardBack)
             setCard(card, cardBack)
             card.setAttribute('data-id', i)
             card.addEventListener('click', flipCard)
