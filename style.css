@@ -1,8 +1,22 @@
+body{
+    width: 550px;
+    margin: 0 auto;
+    background-color: aliceblue;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
 .grid{
     display: flex;
     flex-wrap: wrap;
     /*note this is based on a model with 100px by 100px cells in a 3 X 4 grid, may want to refactor later for scalability*/
    /*should accomadate 24 tiles*/
-    height: 500px;
-    width: 500px;
+   
+    width: 550px;
+}
+h3{
+    font-size: 25px;
+}
+
+img{
+    padding: 5px;
 }

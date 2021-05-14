@@ -54,13 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const grid = document.querySelector('.grid')
     const resultDisplay = document.querySelector('#result')
+    const subtitle = document.querySelector('#message')
     let cardsChosen = []
     let cardsChosenId = []
     let cardsWon = []
     const cardBack = 'Images/card_back.jpg'
     const noCard = 'Images/white.jpg'
     const bomb = "game over, bomb"
-    const bombImg = 'Images/bomb.jpg'
     const bombCard = {name: bomb, img: 'Images/bomb.jpg'}
     const scorePreface = "Pretty Penguins Picked: "
     
@@ -136,15 +136,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+    //flickers screen for a half second
+    function flashScreen(){
+        //possibly play sound FX
+        document.body.style.backgroundColor = "black";
+        document.getElementById('result').style.color ='white';
+        document.getElementById('message').style.color ='white';
+
+    }
+
     //flip your card
     function flipCard() {
         gameOver = false
         let cardId = this.getAttribute('data-id')
         this.setAttribute('src', cardArray[cardId].img)
         if (cardArray[cardId] === bombCard){
-            setTimeout(alert("Game Over: You stepped in penguin poop"), 500)
+            subtitle.textContent +="Game Over: You Stepped in Penguin Poop"
+           // setTimeout(alert("Game Over: You stepped in penguin poop"), 500)
             gameOver = true
             killAll()
+            flashScreen()
         }
         cardsChosen.push(cardArray[cardId].name)
         cardsChosenId.push(cardId)
