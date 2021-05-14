@@ -64,6 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const bombCard = { name: bomb, img: 'Images/bomb.jpg' }
     const scorePreface = "Pretty Penguins Picked: "
     var cardSelected = false;
+    const reward = new Audio('Audio/victory.mp3');
+    const rewardBG = 'Images/dawg.jpg'
+    const defeat = new Audio('Audio/squish.mp3');
 
     //doubles the cards in the card array, shuffles it
     function prepareCardArray() {
@@ -123,9 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
         cardsChosenId = []
         resultDisplay.textContent = scorePreface.concat('', (2 * cardsWon.length).toString())
         if (cardsWon.length === Math.floor(cardArray.length / 2)) {
-            resultDisplay.textContent = 'Congratulations! You picked all the pretty penguins!'
-            //switch remaining card back with flag image here
+            resultDisplay.textContent = 'You picked ALL the pretty penguins!'
+            //
+            document.querySelector('body').setAttribute('background-image', 'url(Images/dawg.jpg)')
+            reward.play()
             killAll()
+            setScreen("magenta", "white")
         }
     }
 
@@ -138,19 +144,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-    //flickers screen for a half second
-    function flashScreen() {
-        //possibly play sound FX
-        document.body.style.backgroundColor = "black";
-        document.getElementById('result').style.color = 'white';
-        document.getElementById('message').style.color = 'white';
-
+    
+//resets background and text colors
+    function setScreen(bg, txt){
+        document.body.style.backgroundColor = bg;
+        document.getElementById('result').style.color = txt;
+        document.getElementById('message').style.color = txt;
     }
 
     //flip your card
     function flipCard() {
-        if (!cardSelected) {
-            cardSelected=true
+        if (cardsChosen.length <2) {
             gameOver = false
             let cardId = this.getAttribute('data-id')
             this.setAttribute('src', cardArray[cardId].img)
@@ -158,14 +162,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 subtitle.textContent += "Game Over: You Stepped in Penguin Poop"
                 gameOver = true
                 killAll()
-                flashScreen()
+                setScreen("black", "white")
+                defeat.play()
             }
             cardsChosen.push(cardArray[cardId].name)
             cardsChosenId.push(cardId)
             if (cardsChosen.length === 2 && !gameOver) {
                 setTimeout(checkForMatch, 500)
             }
-            cardSelected = false;
+            
         }
 
     }
