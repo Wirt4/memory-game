@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             img: 'Images/penguins_looking_up.jpg'
         },
         {
-            name:'rockhopper penguins',
+            name: 'rockhopper penguins',
             img: 'Images/penguins_rockhoppers.jpg'
         },
         {
@@ -59,11 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let cardsChosenId = []
     let cardsWon = []
     const cardBack = 'Images/card_back.jpg'
-    const noCard = 'Images/white.jpg'
+    const noCard = 'Images/blank.png'
     const bomb = "game over, bomb"
-    const bombCard = {name: bomb, img: 'Images/bomb.jpg'}
+    const bombCard = { name: bomb, img: 'Images/bomb.jpg' }
     const scorePreface = "Pretty Penguins Picked: "
-    
+    var cardSelected = false;
+
     //doubles the cards in the card array, shuffles it
     function prepareCardArray() {
         let arrayCopy = cardArray.map(x => x);
@@ -104,11 +105,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (optionOneId == optionTwoId) {
             setCard(cards[optionOneId], cardBack)
             setCard(cards[optionTwoId], cardBack)
-            alert('You have clicked the same image!')
+            //alert('You have clicked the same image!')
         }
         else if (cardsChosen[0] === cardsChosen[1]) {
             setCard(cards[optionOneId], noCard)
             setCard(cards[optionTwoId], noCard)
+
             deactivate(cards[optionOneId])
             deactivate(cards[optionTwoId])
             cardsWon.push(cardsChosen)
@@ -119,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         cardsChosen = []
         cardsChosenId = []
-        resultDisplay.textContent = scorePreface.concat('', cardsWon.length.toString() )
+        resultDisplay.textContent = scorePreface.concat('', (2 * cardsWon.length).toString())
         if (cardsWon.length === Math.floor(cardArray.length / 2)) {
             resultDisplay.textContent = 'Congratulations! You picked all the pretty penguins!'
             //switch remaining card back with flag image here
@@ -128,40 +130,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //removes event listeners from all cards
-    function killAll(){
+    function killAll() {
         const cards = document.querySelectorAll('img')
-        for (let i=0; i < cards.length; i++){
+        for (let i = 0; i < cards.length; i++) {
             deactivate(cards[i])
         }
 
     }
 
     //flickers screen for a half second
-    function flashScreen(){
+    function flashScreen() {
         //possibly play sound FX
         document.body.style.backgroundColor = "black";
-        document.getElementById('result').style.color ='white';
-        document.getElementById('message').style.color ='white';
+        document.getElementById('result').style.color = 'white';
+        document.getElementById('message').style.color = 'white';
 
     }
 
     //flip your card
     function flipCard() {
-        gameOver = false
-        let cardId = this.getAttribute('data-id')
-        this.setAttribute('src', cardArray[cardId].img)
-        if (cardArray[cardId] === bombCard){
-            subtitle.textContent +="Game Over: You Stepped in Penguin Poop"
-           // setTimeout(alert("Game Over: You stepped in penguin poop"), 500)
-            gameOver = true
-            killAll()
-            flashScreen()
+        if (!cardSelected) {
+            cardSelected=true
+            gameOver = false
+            let cardId = this.getAttribute('data-id')
+            this.setAttribute('src', cardArray[cardId].img)
+            if (cardArray[cardId] === bombCard) {
+                subtitle.textContent += "Game Over: You Stepped in Penguin Poop"
+                gameOver = true
+                killAll()
+                flashScreen()
+            }
+            cardsChosen.push(cardArray[cardId].name)
+            cardsChosenId.push(cardId)
+            if (cardsChosen.length === 2 && !gameOver) {
+                setTimeout(checkForMatch, 500)
+            }
+            cardSelected = false;
         }
-        cardsChosen.push(cardArray[cardId].name)
-        cardsChosenId.push(cardId)
-        if (cardsChosen.length === 2 && !gameOver) {
-            setTimeout(checkForMatch, 500)
-        }
+
     }
 
     createBoard()
